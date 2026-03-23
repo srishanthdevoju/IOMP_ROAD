@@ -46,8 +46,11 @@ def reencode_for_website(video_path):
     # Get properties from analyzed video
     cap_analyzed = cv2.VideoCapture(analyzed_path)
     analyzed_frames = int(cap_analyzed.get(cv2.CAP_PROP_FRAME_COUNT))
-    w = int(cap_analyzed.get(cv2.CAP_PROP_FRAME_WIDTH))
-    h = int(cap_analyzed.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    # Downscale by 50% to ensure file size stays under GitHub's 100MB limit
+    orig_w = cap_analyzed.get(cv2.CAP_PROP_FRAME_WIDTH)
+    orig_h = cap_analyzed.get(cv2.CAP_PROP_FRAME_HEIGHT)
+    w = int(orig_w * 0.5)
+    h = int(orig_h * 0.5)
     cap_analyzed.release()
 
     # Get original video duration to calculate correct FPS
@@ -81,7 +84,8 @@ def reencode_for_website(video_path):
         ret, frame = cap.read()
         if not ret:
             break
-        writer.write(frame)
+        frame_resized = cv2.resize(frame, (w, h))
+        writer.write(frame_resized)
         count += 1
         if count % 200 == 0:
             print(f"  {count}/{analyzed_frames} frames...")
@@ -113,3 +117,4 @@ if __name__ == "__main__":
     open_website()
 
     print("\n✅ All done! Your website is ready with the new video.\n")
+
