@@ -44,7 +44,7 @@ ehthumbs.db
 *.wmv
 
 # Allow the website's analyzed video (needed for Vercel deploy)
-!website/input_analyzed_h264.mp4
+!input_analyzed_h264.mp4
 
 # ── Vercel ───────────────────────────────────────────
 .vercel/
